@@ -245,6 +245,96 @@ class block_mhaairs_gradebookservice_update_item_testcase extends block_mhaairs_
     }
 
     /**
+     * Tests the gradebookservice update grade with different course ids.
+     * In particular since the service tries the fetch the course by both
+     * id number and internal id, we want to make sure that incidental conflicts
+     * are handled correctly.
+     * Cases:
+     *  - Idnumber of course B is like the id of course A; item should be added to course A.
+     *  - Idnumber of course B is like the id of course A and identity type = internal;
+     *    item should be added to course A.
+     *  - The int of non-integer idnumber of course B equals the id of course A;
+     *    item should be added to course B.
+     *  - The int of non-integer idnumber of course B equals the id of course A,
+     *    and identity type = internal;
+     *    item update should fail.
+     *
+     * @return void
+     */
+    public function test_item_course() {
+        global $DB;
+
+        $this->set_user('admin');
+
+        $iteminstance = 100;
+
+        // Create a course with id number which is the internal id
+        // of tc1.
+        $idnumber = $this->course->id;
+        $record = array('idnumber' => $idnumber);
+        $course = $this->getDataGenerator()->create_course($record);
+
+        // Item should be added to tc1.
+        $iteminstance++;
+        $options = array('category' => 'homework');
+        $result = $this->add_grade_item_by_service($idnumber, $iteminstance, $options);
+        $this->assertEquals(GRADE_UPDATE_OK, $result);
+
+        $params = array(
+            'itemmodule' => 'mhaairs',
+            'itemname' => $iteminstance,
+            'courseid' => $this->course->id,
+        );
+        $this->assertEquals(1, $DB->count_records('grade_items', $params));
+
+        // With idonly: Item should be added to tc1.
+        $iteminstance++;
+        $options = array('category' => 'homework', 'identitytype' => 'internal');
+        $result = $this->add_grade_item_by_service($idnumber, $iteminstance, $options);
+        $this->assertEquals(GRADE_UPDATE_OK, $result);
+
+        $params = array(
+            'itemmodule' => 'mhaairs',
+            'itemname' => $iteminstance,
+            'courseid' => $this->course->id,
+        );
+        $this->assertEquals(1, $DB->count_records('grade_items', $params));
+
+        // Create a course with a non-int id number whose int is the internal id
+        // of tc1.
+        $idnumber = $this->course->id. '.123';
+        $record = array('idnumber' => $idnumber);
+        $course = $this->getDataGenerator()->create_course($record);
+
+        // Item should be added to the new course.
+        $iteminstance++;
+        $options = array('category' => 'homework');
+        $result = $this->add_grade_item_by_service($idnumber, $iteminstance, $options);
+        $this->assertEquals(GRADE_UPDATE_OK, $result);
+
+        // Verify the item added to the new course.
+        $params = array(
+            'itemmodule' => 'mhaairs',
+            'itemname' => $iteminstance,
+            'courseid' => $course->id,
+        );
+        $this->assertEquals(1, $DB->count_records('grade_items', $params));
+
+        // With internal id: update should fail.
+        $iteminstance++;
+        $options = array('category' => 'homework', 'identitytype' => 'internal');
+        $result = $this->add_grade_item_by_service($idnumber, $iteminstance, $options);
+        $this->assertEquals(GRADE_UPDATE_FAILED, $result);
+
+        // Verify the item not added to any course.
+        $params = array(
+            'itemmodule' => 'mhaairs',
+            'itemname' => $iteminstance,
+        );
+        $this->assertEquals(0, $DB->count_records('grade_items', $params));
+    }
+
+    /**
      * Returns the list of cases from the fixtures. For each case generates the service
      * params and item params.
      *
