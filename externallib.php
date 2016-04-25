@@ -159,8 +159,7 @@ class block_mhaairs_gradebookservice_external extends external_api {
         $logger->log('Grades validated: '. var_export($grades, true));
 
         // Get the course.
-        $course = self::get_course($courseid, $identitytype);
-        if ($course === false) {
+        if (!$course = self::get_course($courseid, $identitytype)) {
             // No valid course specified.
             $logger->log("Course id received was not correct. courseid = {$courseid}.");
             $logger->log('Returning '. GRADE_UPDATE_FAILED. '.');
@@ -728,10 +727,6 @@ class block_mhaairs_gradebookservice_external extends external_api {
     private static function get_course($courseid, $idtype = null) {
         global $DB;
 
-        $course = false;
-        $where = array();
-        $params = array();
-
         // We must have course id.
         if (empty($courseid)) {
             return false;
@@ -740,22 +735,21 @@ class block_mhaairs_gradebookservice_external extends external_api {
         // Do we need to look up the course only by internal id?
         $idonly = $idtype ? in_array($idtype, array('internal', 'lti'), true) : false;
 
-        // If courseid is numeric we search by course id.
-        if (is_numeric($courseid) and $courseid > 0) {
-            $where[] = 'id = ?';
-            $params[] = (int) $courseid;
-        }
+        // Is courseid a positive integer and as such can be internal id?
+        $ispositiveint = filter_var($courseid, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
 
-        // We search also by the course idnumber if required.
+        $course = false;
+
+        // First search course by id number.
         if (!$idonly) {
-            $where[] = 'idnumber = ?';
-            $params[] = $courseid;
+            $params = array('idnumber' => $courseid);
+            $course = $DB->get_record('course', $params, '*', IGNORE_MULTIPLE);
         }
 
-        // Fetch the course record.
-        if (!empty($where)) {
-            $select = implode(' OR ', $where);
-            $course = $DB->get_record_select('course', $select, $params, '*', IGNORE_MULTIPLE);
+        // If not found and the courseid is a positive integer, we search by course id.
+        if (!$course and $ispositiveint) {
+            $params = array('id' => (int) $courseid);
+            $course = $DB->get_record('course', $params);
         }
 
         return $course;
