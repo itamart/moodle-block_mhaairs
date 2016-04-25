@@ -40,23 +40,16 @@ $string['customernumberlabel'] = 'Customer Number';
 $string['sslonlylabel'] = 'SSL Only';
 $string['conskeylabel'] = 'Consumer Key';
 $string['baseaddresslabel'] = 'Service Address';
-$string['service_down_msg'] = 'One or more of the web services is currently down or your client access data are not '.
-                              'correctly configured. Please contact McGraw-Hill help for further action.';
+$string['service_down_msg'] = 'One or more of the web services is currently down or your client access data are not correctly configured. Please contact McGraw-Hill help for further action.';
 $string['services_displaylabel'] = 'Available Services';
-$string['services_desc'] = 'The services above will display as links in the MH AAIRS block. Select which system(s) '.
-                           'should be available ';
-$string['services_desc'] .= 'to courses on your site. The service(s) selected will appear as options in the block\'s '.
-                            'instance settings.';
+$string['services_desc'] = 'The services above will display as links in the MH AAIRS block. Select which system(s) should be available to courses on your site. The service(s) selected will appear as options in the block\'s instance settings.';
 $string['connected_displaylabel'] = ' ConnectEd';
 $string['tegrity_displaylabel'] = ' Tegrity Campus';
 $string['mhaairs_displaylabel'] = ' McGraw-Hill Campus';
 $string['mhaairs_syncgradebook'] = 'Gradebook Sync';
-$string['mhaairs_syncgradebookdesc'] = 'Gradebook Sync provides the ability to push scores from MH Campus directly to '.
-                                       'the Moodle gradebook. ';
-$string['mhaairs_syncgradebookdesc'] .= 'Note: If only Tegrity is enabled on your site, this is irrelevant.';
+$string['mhaairs_syncgradebookdesc'] = 'Gradebook Sync provides the ability to push scores from MH Campus directly to the Moodle gradebook. Note: If only Tegrity is enabled on your site, this is irrelevant.';
 $string['mhaairs_displayhelp'] = 'Help links';
-$string['mhaairs_displayhelpdesc'] = 'Select this option if you wish help links to appear in the block appropriate to '.
-                                     'admin and teacher roles.';
+$string['mhaairs_displayhelpdesc'] = 'Select this option if you wish help links to appear in the block appropriate to admin and teacher roles.';
 $string['mhaairs_locktype'] = 'Select locking type';
 $string['mhaairs_locktypedesc'] = 'Choose locking type appropriate for your server setup.';
 
