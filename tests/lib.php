@@ -113,4 +113,53 @@ abstract class block_mhaairs_testcase extends advanced_testcase {
         }
     }
 
+    /**
+     * Adds a grade item via the update grade service.
+     *
+     * @param string courseid
+     * @param string iteminstance
+     * @param array options
+     * @return void
+     */
+    protected function add_grade_item_by_service($courseid, $iteminstance, $options = array()) {
+        $callback = 'block_mhaairs_gradebookservice_external::update_grade';
+
+        // Service params.
+        $serviceparams = array(
+            'source' => 'mhaairs',
+            'courseid' => $courseid,
+            'itemtype' => 'manual',
+            'itemmodule' => 'mhaairs',
+            'iteminstance' => $iteminstance,
+            'itemnumber' => '0',
+            'grades' => null,
+            'itemdetails' => null,
+        );
+
+        $category = !empty($options['category']) ? $options['category'] : '';
+        $deleted = !empty($options['deleted']) ? $options['deleted'] : '';
+        $identitytype = !empty($options['identitytype']) ? $options['identitytype'] : '';
+        $useexisting = !empty($options['useexisting']) ? $options['useexisting'] : '';
+
+        // Item details.
+        $itemdetails = array(
+            'categoryid' => $category,
+            'itemname' => $iteminstance,
+            'idnumber' => 0,
+            'gradetype' => GRADE_TYPE_VALUE,
+            'grademax' => 100,
+            'hidden' => '',
+            'deleted' => $deleted,
+            'identity_type' => $identitytype,
+            'needsupdate' => '',
+            'useexisting' => $useexisting,
+        );
+
+        // Create first grade item.
+        $itemdetailsjson = urlencode(json_encode($itemdetails));
+        $serviceparams['itemdetails'] = $itemdetailsjson;
+
+        $result = call_user_func_array($callback, $serviceparams);
+        return $result;
+    }
 }
