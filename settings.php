@@ -87,15 +87,6 @@ if ($ADMIN->fulltree) {
         1
     ));
 
-    // Lock type.
-    $settings->add(new admin_setting_configselect(
-        'block_mhaairs_locktype',
-        new lang_string('mhaairs_locktype', 'block_mhaairs'),
-        new lang_string('mhaairs_locktypedesc', 'block_mhaairs'),
-        'nonelock',
-        array('nonelock' => 'No locking', 'filelock' => 'File locking', 'redislock' => 'Redis locking')
-    ));
-
     // Grade exchange log.
     $settings->add(new admin_setting_configcheckbox(
             'block_mhaairs_gradelog',
