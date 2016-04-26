@@ -50,8 +50,6 @@ $string['mhaairs_syncgradebook'] = 'Gradebook Sync';
 $string['mhaairs_syncgradebookdesc'] = 'Gradebook Sync provides the ability to push scores from MH Campus directly to the Moodle gradebook. Note: If only Tegrity is enabled on your site, this is irrelevant.';
 $string['mhaairs_displayhelp'] = 'Help links';
 $string['mhaairs_displayhelpdesc'] = 'Select this option if you wish help links to appear in the block appropriate to admin and teacher roles.';
-$string['mhaairs_locktype'] = 'Select locking type';
-$string['mhaairs_locktypedesc'] = 'Choose locking type appropriate for your server setup.';
 
 // Strings for the main block display file.
 $string['linktypelabel'] = ' Link type: ';

@@ -644,77 +644,63 @@ class block_mhaairs_gradebookservice_external extends external_api {
     }
 
     /**
-     * Returns a grade category with the specified by name.
-     * If the category does not exist it is created.
-     * If the category exists any duplicates are deleted (using the locks).
-     * We have to be carefull about MDL-37055 and make sure
-     * grade categories and grade items are in order.
+     * Adds the grade item to the category specified by fullname.
+     * If the category does not it is first created. This may create a performance hit
+     * as the service call locks the database table until it completes adding the category.
+     * Adding the category is delegated to an ad-hoc task.
+     * If desired the code can be adjusted to queue the task for cron instead of executing
+     * it here. This can consist of a mode switch by a config setting and when in background
+     * mode, calling \core\task\manager::queue_adhoc_task($addcat) to queue the task.
      *
+     * @param \grade_item $gitem
      * @param string $catnam
-     * @param int $courseid
-     * @return grade_category|null
+     * @return void.
      */
-    protected static function get_grade_category($catname, $courseid) {
-        global $CFG;
+    protected static function update_grade_item_category($gitem, $catname) {
+        $courseid = $gitem->courseid;
 
-        if (!$catname) {
-            return null;
-        }
-
-        require_once($CFG->dirroot.'/blocks/mhaairs/lib/lock/abstractlock.php');
-
-        $category = null;
-
-        $instance = new block_mhaairs_locinst();
-
-        // Fetch all grade category items that match the target grade category by fullname.
-        // If we have more than one then we need to delete the duplicates.
+        // Fetch the grade category item that matches the target grade category by fullname.
+        // There could be more than one grade category with the same name, so fetch all and
+        // sort by id so that we always use the oldest one.
         $fetchparams = array(
             'fullname' => $catname,
             'courseid' => $courseid
         );
-        $categories = grade_category::fetch_all($fetchparams);
 
-        // If the category exists we use it.
-        if ($categories) {
-            // The first is our target category.
-            $category = array_shift($categories);
+        if ($categories = \grade_category::fetch_all($fetchparams)) {
+            // Categories found.
+            if (count($categories) > 1) {
+                // Sort by key which is the category id,
+                // to put the oldest first.
+                ksort($categories);
+            }
 
-            // We delete any duplicates.
-            if ($categories) {
-                if ($instance->lock()->locked()) {
-                    // We have exclusive lock so let's do it.
-                    try {
-                        foreach ($categories as $cat) {
-                            if ($cat->set_parent($category->id)) {
-                                $cat->delete();
-                            }
-                        }
-                    } catch (Exception $e) {
-                        // If we fail there is not much else we can do here.
-                    }
-                }
+            // Take the first.
+            $category = reset($categories);
+
+            if ($gitem->categoryid != $category->id) {
+                // Item needs update.
+                $gitem->categoryid = $category->id;
+                $gitem->update();
             }
 
         } else {
+            // Category not found so we task it.
+            $addcat = new \block_mhaairs\task\add_grade_category_task();
 
-            // If the category does not exist we create it.
-            $gradeaggregation = get_config('core', 'grade_aggregation');
-            if ($gradeaggregation === false) {
-                $gradeaggregation = GRADE_AGGREGATE_WEIGHTED_MEAN2;
-            }
-            // Parent category is automatically added(created) during insert.
-            $catparams = array(
-                'fullname' => $catname,
-                'courseid' => $courseid,
-                'hidden' => false,
-                'aggregation' => $gradeaggregation,
-            );
-            $category = new grade_category($catparams, false);
-            $category->id = $category->insert();
+            // We don't set blocking by set_blocking(true).
+
+            // We add custom data.
+            $addcat->set_custom_data(array(
+               'catname' => $catname,
+               'courseid' => $courseid,
+               'itemid' => $gitem->id,
+            ));
+
+            // We execute the task.
+            // This will throw an exception if fails to create the category.
+            $addcat->execute();
         }
-
-        return $category;
     }
 
     /**
@@ -900,16 +886,7 @@ class block_mhaairs_gradebookservice_external extends external_api {
 
             // Add the item to the specified category if applicable.
             if ($catname) {
-                $category = null;
-                $category = self::get_grade_category($catname, $courseid);
-
-                // Optional.
-                try {
-                    $gitem->categoryid = $category->id;
-                    $gitem->update();
-                } catch (Exception $e) {
-                    // Silence the exception.
-                }
+                self::update_grade_item_category($gitem, $catname);
             }
         }
 
