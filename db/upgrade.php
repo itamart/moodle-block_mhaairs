@@ -15,22 +15,44 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Block MHAAIRS Improved
+ * This file keeps track of upgrades to the mhaairs block
  *
+ * Sometimes, changes between versions involve alterations to database structures
+ * and other major things that may break installations.
+ *
+ * The upgrade function in this file will attempt to perform all the necessary
+ * actions to upgrade your older installation to the current version.
+ *
+ * If there's something it cannot do itself, it will tell you what you need to do.
+ *
+ * The commands in here will all be database-neutral, using the methods of
+ * database_manager class
+ *
+ * Please do not forget to use upgrade_set_timeout()
+ * before any action that may take longer time to finish.
+ *
+ * @since Moodle 2.8
  * @package    block_mhaairs
+ * @copyright  2016 Itamar Tzadok
  * @copyright  2013 Moodlerooms inc.
  * @author     Teresa Hardy <thardy@moodlerooms.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+require_once(__DIR__ . '/upgradelib.php');
 
-function xmldb_block_mhaairs_upgrade($oldversion = 0) {
+/**
+ * Upgrade the mhaairs block
+ * @param int $oldversion
+ * @param object $block
+ */
+function xmldb_block_mhaairs_upgrade($oldversion, $block) {
     global $DB;
 
-    $result = true;
+    $blockname = 'mhaairs';
 
-    if ($result && $oldversion < 2011091314) {
+    $savepoint = 2011091314;
+    if ($oldversion < $savepoint) {
         // Check for multiple instances of mhaairs blocks in all courses.
         $blockname = 'mhaairs';
         $tbl = 'block_instances';
@@ -61,17 +83,25 @@ function xmldb_block_mhaairs_upgrade($oldversion = 0) {
                         $transaction = $DB->start_delegated_transaction();
                         $DB->delete_records_list($tbl, 'id', $deletearr);
                         $transaction->allow_commit();
+                        upgrade_block_savepoint(true, $savepoint, $blockname);
                     } catch (Exception $e) {
                         if (!empty($transaction) && !$transaction->is_disposed()) {
                             $transaction->rollback($e);
                         }
                     }
                 } catch (Exception $e) {
-                    $result = false;
+                    return false;
                 }
             }
         }
     }
 
-    return $result;
+    $savepoint = 2015051104.01;
+    if ($oldversion < $savepoint) {
+        block_mhaairs_remove_locktype_setting($block);
+
+        upgrade_block_savepoint(true, $savepoint, $blockname);
+    }
+
+    return true;
 }
