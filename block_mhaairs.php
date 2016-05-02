@@ -290,7 +290,7 @@ class block_mhaairs extends block_base {
             $targetw = array('target' => '__mhaairs_teacherhelp_window');
             $instrhelplink = html_writer::link(
                 $helpurls['InstructorHelpUrl'],
-                get_string('instrhelplabel', __CLASS__),
+                get_string('instructorhelplabel', __CLASS__),
                 $targetw);
             $helplinks[] = $instrhelplink;
         }
