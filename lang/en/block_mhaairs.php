@@ -54,7 +54,7 @@ $string['mhaairs_displayhelpdesc'] = 'Select this option if you wish help links 
 // Strings for the main block display file.
 $string['linktypelabel'] = ' Link type: ';
 $string['adminhelplabel'] = 'Admin documentation';
-$string['instrhelplabel'] = 'Instructor documentation';
+$string['instructorhelplabel'] = 'Instructor documentation';
 $string['nolinktext'] = 'No link';
 $string['sitenotconfig'] = 'The site requires further configuration. Please contact your site admin. ';
 $string['blocknotconfig'] = 'The block requires further configuration. Please configure the block.';
