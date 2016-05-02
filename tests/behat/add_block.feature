@@ -139,16 +139,15 @@ Feature: Add block
         Then I should see "Admin documentation" in the "div.block_mhaairs .footer .helplink:nth-child(1)" "css_element"
         And I should see "Instructor documentation" in the "div.block_mhaairs .footer .helplink:nth-child(2)" "css_element"
 
-        And I follow "Admin documentation"
-        And I switch to "__mhaairs_adminhelp_window" window
-        And I should see "MH Campus Admin Help Portal"
-        And I switch to the main window
+        And the mhaairs help page "adminhelp" is not broken
         And I log out
 
         When I log in as "teacher1"
         And I follow "Course 1"
         Then I should not see "Admin documentation" in the "div.block_mhaairs" "css_element"
         And I should see "Instructor documentation" in the "div.block_mhaairs .footer .helplink" "css_element"
+
+        And the mhaairs help page "instructorhelp" is not broken
         And I log out
 
         When I log in as "student1"

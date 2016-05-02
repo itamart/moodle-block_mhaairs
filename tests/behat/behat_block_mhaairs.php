@@ -42,14 +42,12 @@ use Moodle\BehatExtension\Exception\SkippedException as SkippedException;
  */
 class behat_block_mhaairs extends behat_base {
 
-     /**
-      * Sets the customer number and shared secret from bht config in the settings form.
-      *
-      * @Given /^I set the mhaairs customer number and shared secret$/
-      */
+    /**
+     * Sets the customer number and shared secret from bht config in the settings form.
+     *
+     * @Given /^I set the mhaairs customer number and shared secret$/
+     */
     public function set_the_mhaairs_customer_number_and_shared_secret() {
-        $steps = array();
-
         $customernumber = get_config(null, 'behat_mhaairs_customer_number');
         $sharedsecret = get_config(null, 'behat_mhaairs_shared_secret');
 
@@ -59,13 +57,12 @@ class behat_block_mhaairs extends behat_base {
         }
 
         $data = array(
-            "| Customer Number | $customernumber |",
-            "| Shared Secret   | $sharedsecret   |",
+            'Customer Number' => $customernumber,
+            'Shared Secret' => $sharedsecret,
         );
-        $table = new TableNode(implode("\n", $data));
-        $steps[] = new Given('I set the following fields to these values:', $table);
-
-        return $steps;
+        $table = new TableNode($data);
+        $step = 'behat_forms::i_set_the_following_fields_to_these_values';
+        $this->own_execute($step, array($table));
     }
 
     /**
@@ -74,8 +71,6 @@ class behat_block_mhaairs extends behat_base {
      * @Given /^the mhaairs customer number and shared secret are set$/
      */
     public function the_mhaairs_customer_number_and_shared_secret_are_set() {
-        $steps = array();
-
         $customernumber = get_config(null, 'behat_mhaairs_customer_number');
         $sharedsecret = get_config(null, 'behat_mhaairs_shared_secret');
 
@@ -84,15 +79,8 @@ class behat_block_mhaairs extends behat_base {
             throw new SkippedException;
         }
 
-        $data = array(
-            "| block_mhaairs_customer_number | $customernumber |",
-            "| block_mhaairs_shared_secret   | $sharedsecret   |",
-        );
-        $table = new TableNode(implode("\n", $data));
-
-        $steps[] = new Given('the following config values are set as admin:', $table);
-
-        return $steps;
+        set_config('block_mhaairs_customer_number', $customernumber);
+        set_config('block_mhaairs_shared_secret', $sharedsecret);
     }
 
     /**
@@ -118,6 +106,39 @@ class behat_block_mhaairs extends behat_base {
 
             $DB->set_field('external_services', 'enabled', 1, $params);
         }
+    }
+
+    /**
+     * Opens mhaairs help page and verify that it is not broken.
+     *
+     * @Given /^the mhaairs help page "(?P<name_string>(?:[^"]|\\")*)" is not broken$/
+     */
+    public function the_mhaairs_help_page_is_not_broken($name) {
+        $windowname = get_config(null, 'behat_mhaairs_'. $name. '_window_name');
+        $windowcontent = get_config(null, 'behat_mhaairs_'. $name. '_window_content');
+
+        // Skip if customer number or shared secret are not set.
+        if (!$windowname or !$windowcontent) {
+            throw new SkippedException;
+        }
+
+        $linklabel = get_string($name. 'label', 'block_mhaairs');
+
+        // Follow the help link.
+        $step = 'behat_general::click_link';
+        $this->own_execute($step, array($linklabel));
+
+        // Switch to the window.
+        $step = 'behat_general::switch_to_window';
+        $this->own_execute($step, array($windowname));
+
+        // Verify page by content.
+        $step = 'behat_general::assert_page_contains_text';
+        $this->own_execute($step, array($windowcontent));
+
+        // Switch to the main window.
+        $step = 'behat_general::switch_to_the_main_window';
+        $this->own_execute($step, array());
     }
 
     /**
@@ -178,17 +199,13 @@ class behat_block_mhaairs extends behat_base {
     public function i_set_the_token_field_to_token_for_service($username, $service) {
         global $DB;
 
-        $steps = array();
-
         $params = array(
             'userid' => $this->get_user_id($username),
             'externalserviceid' => $this->get_service_id($service),
         );
-
         $token = $DB->get_field('external_tokens', 'token', $params);
-        $steps[] = new Given("I set the field \"token\" to \"$token\"");
-
-        return $steps;
+        $step = 'behat_forms::i_set_the_field_to';
+        $this->own_execute($step, array('token', $token));
     }
 
     /**
@@ -229,4 +246,30 @@ class behat_block_mhaairs extends behat_base {
         return $id;
     }
 
+    /**
+     * Helper function to execute api in a given context.
+     * Backwards compatibility for pre 3.0 versions.
+     * NOTE: Wait for pending js and look for exception should be called,
+     * to avoid unexpected results. But they are not implemented here, so
+     * pre 3.0 use might encounter issues.
+     *
+     * @param string $contextapi context in which api is defined.
+     * @param array $params list of params to pass.
+     * @throws Exception
+     */
+    protected function own_execute($contextapi, $params = array()) {
+        if (method_exists($this, 'execute')) {
+            $this->execute($contextapi, $params);
+            return;
+        }
+
+        if (!is_array($params)) {
+            $params = array($params);
+        }
+
+        // Get required context and execute the api.
+        $contextapi = explode("::", $contextapi);
+        $context = behat_context_helper::get($contextapi[0]);
+        call_user_func_array(array($context, $contextapi[1]), $params);
+    }
 }
