@@ -47,7 +47,7 @@ class block_mhaairs_generator extends testing_block_generator {
      * @param array $options
      * @return stdClass activity record with extra cmid field
      */
-    public function create_instance($record = null, array $options = null) {
+    public function create_instance($record = null, $options = null) {
         global $DB;
 
         $this->instancecount++;
