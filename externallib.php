@@ -541,7 +541,7 @@ class block_mhaairs_gradebookservice_external extends external_api {
         }
 
         // Update the user grade.
-        if (!$gitem->update_final_grade($grades['userid'], $grades['rawgrade'], $source)) {
+        if (!$gitem->update_final_grade($grades['userid'], $grades['rawgrade'], $source,base64_decode($grades['feedback']))) {
             return GRADE_UPDATE_FAILED;
         }
 
@@ -621,6 +621,7 @@ class block_mhaairs_gradebookservice_external extends external_api {
             'userid' => PARAM_TEXT,
             'rawgrade' => PARAM_FLOAT,
             'identity_type' => PARAM_ALPHA,
+            'feedback'=> PARAM_TEXT
         );
 
         $details = array();
