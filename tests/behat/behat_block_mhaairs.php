@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Steps definitions related with the dataform activity.
+ * Steps definitions.
  *
  * @package    block_mhaairs
  * @category   tests

@@ -23,7 +23,7 @@ Feature: Add block
     ##:/
     Scenario: Add block 001
         Given I log in as "admin"
-        And I follow "Courses"
+        And I follow "Site home"
         And I follow "Course 1"
 
         When I turn editing mode on
@@ -43,7 +43,7 @@ Feature: Add block
         Given the mhaairs customer number and shared secret are set
 
         Given I log in as "admin"
-        And I follow "Courses"
+        And I follow "Site home"
         And I follow "Course 1"
 
         When I turn editing mode on
@@ -70,7 +70,7 @@ Feature: Add block
         And I set the field "McGraw-Hill Campus" to "checked"
         And I press "Save changes"
 
-        And I follow "Courses"
+        And I follow "Site home"
         And I follow "Course 1"
 
         When I turn editing mode on
@@ -100,7 +100,7 @@ Feature: Add block
         And I set the field "McGraw-Hill Campus" to "checked"
         And I press "Save changes"
 
-        And I follow "Courses"
+        And I follow "Site home"
         And I follow "Course 1"
 
         When I turn editing mode on
@@ -130,7 +130,7 @@ Feature: Add block
         And I set the field "McGraw-Hill Campus" to "checked"
         And I press "Save changes"
 
-        And I follow "Courses"
+        And I follow "Site home"
         And I follow "Course 1"
 
         When I turn editing mode on
@@ -173,7 +173,7 @@ Feature: Add block
         And I set the field "Help links" to ""
         And I press "Save changes"
 
-        And I follow "Courses"
+        And I follow "Site home"
         And I follow "Course 1"
 
         When I turn editing mode on
