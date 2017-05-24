@@ -104,7 +104,7 @@ $settings = null;
 $externalpage = new admin_externalpage(
     'blockmhaairs_testclient',
     new lang_string('testclient', 'webservice'),
-    '/blocks/mhaairs/admin/testclient.php'
+    "$CFG->wwwroot/blocks/mhaairs/admin/testclient.php"
 );
 $ADMIN->add('blockmhaairsfolder', $externalpage);
 
@@ -112,7 +112,7 @@ $ADMIN->add('blockmhaairsfolder', $externalpage);
 $externalpage = new admin_externalpage(
     'blockmhaairs_gradelogs',
     new lang_string('gradelogs', 'block_mhaairs'),
-    '/blocks/mhaairs/admin/gradelogs.php'
+    "$CFG->wwwroot/blocks/mhaairs/admin/gradelogs.php"
 );
 $ADMIN->add('blockmhaairsfolder', $externalpage);
 
@@ -120,6 +120,6 @@ $ADMIN->add('blockmhaairsfolder', $externalpage);
 $externalpage = new admin_externalpage(
     'blockmhaairs_resetcaches',
     new lang_string('resetcaches', 'block_mhaairs'),
-    '/blocks/mhaairs/admin/resetcaches.php'
+    "$CFG->wwwroot/blocks/mhaairs/admin/resetcaches.php"
 );
 $ADMIN->add('blockmhaairsfolder', $externalpage);
