@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2016120503;
-$plugin->release = '3.2.3 RC1';
+$plugin->release = '3.2.3';
 $plugin->requires = 2016120500;
 $plugin->cron = 0;
 $plugin->component = 'block_mhaairs';
-$plugin->maturity  = MATURITY_BETA;
+$plugin->maturity  = MATURITY_STABLE;
