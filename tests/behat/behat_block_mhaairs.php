@@ -117,7 +117,7 @@ class behat_block_mhaairs extends behat_base {
         $windowname = get_config(null, 'behat_mhaairs_'. $name. '_window_name');
         $windowcontent = get_config(null, 'behat_mhaairs_'. $name. '_window_content');
 
-        // Skip if customer number or shared secret are not set.
+        // Skip if window name and content are not set.
         if (!$windowname or !$windowcontent) {
             throw new SkippedException;
         }
