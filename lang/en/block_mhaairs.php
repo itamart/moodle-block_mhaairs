@@ -19,13 +19,14 @@ defined('MOODLE_INTERNAL') || die();
 // Language Strings - English.
 
 $string['pluginname'] = 'McGraw-Hill AAIRS';
-$string['mhaairs'   ] = 'MH AAIRS';
+$string['mhaairs'] = 'MH AAIRS';
 
 // Strings for capabilities.
 $string['mhaairs:myaddinstance'] = 'Add an instance of McGraw-Hill AAIRS block to the my page.';
 $string['mhaairs:viewadmindoc'  ] = 'View Administrator Documentation';
 $string['mhaairs:viewteacherdoc'] = 'View Teacher Documentation';
 $string['mhaairs:addinstance'   ] = 'Add a new McGraw-Hill AAIRS block';
+$string['privacy:metadata'] = 'The McGraw-Hill AAIRS block does not store or display any personal data.';
 
 // Strings for the edit_form file.
 $string['linktype'         ] = 'Link Type';
