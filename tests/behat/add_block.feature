@@ -23,13 +23,23 @@ Feature: Add block
     ##:/
     Scenario: Add block 001
         Given I log in as "admin"
-        And I follow "Site home"
-        And I follow "Course 1"
+        And I am on "Course 1" course homepage
 
         When I turn editing mode on
         And I add the "McGraw-Hill AAIRS" block
-
         Then I should see "The site requires further configuration. Please contact your site admin."
+        And I log out
+
+        ## Teacher.
+        Given I log in as "teacher1"
+        And I am on "Course 1" course homepage
+        Then I should see "The site requires further configuration. Please contact your site admin."
+        And I log out
+
+        ## Student.
+        Given I log in as "student1"
+        And I am on "Course 1" course homepage
+        Then ".block.block_mhaairs" "css_element" does not exist
     #:Scenario
 
     ##/:
@@ -43,15 +53,11 @@ Feature: Add block
         Given the mhaairs customer number and shared secret are set
 
         Given I log in as "admin"
-        And I follow "Site home"
-        And I follow "Course 1"
+        And I am on "Course 1" course homepage
 
         When I turn editing mode on
         And I add the "McGraw-Hill AAIRS" block
-
-        Then I should see "The site requires further configuration. Please contact your site admin."
-
-        When I configure the "McGraw-Hill AAIRS" block
+        And I configure the "McGraw-Hill AAIRS" block
         Then "id_config_MHCampus" "checkbox" should not exist
         And I should see "Available Services have not yet been configured for this site. Please contact your site admin."
     #:Scenario
@@ -62,6 +68,7 @@ Feature: Add block
     ## And services are enabled
     ## Then the block in a course should display the enabled services
     ##:/
+    @block_mhaairs-add-block-003
     Scenario: Add block 003
         Given the mhaairs customer number and shared secret are set
 
@@ -79,7 +86,7 @@ Feature: Add block
         Then I should see "McGraw-Hill Campus" in the ".block.block_mhaairs div.servicelink" "css_element"
         And I follow "McGraw-Hill Campus"
         And I switch to "__mhaairs_service_window" window
-        And I should see "C1"
+        #And I should see "C1"
         And I switch to the main window
         And I log out
 
