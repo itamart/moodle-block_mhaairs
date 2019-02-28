@@ -73,7 +73,9 @@ Feature: Add block
         Given the mhaairs customer number and shared secret are set
 
         Given I log in as "admin"
-        And I navigate to "Settings" node in "Site administration > Plugins > Blocks > McGraw-Hill AAIRS"
+        And I follow "Site administration"
+        And I follow "Plugins"
+        And I follow "McGraw-Hill AAIRS"
         And I set the field "McGraw-Hill Campus" to "checked"
         And I press "Save changes"
 
@@ -86,6 +88,7 @@ Feature: Add block
         Then I should see "McGraw-Hill Campus" in the ".block.block_mhaairs div.servicelink" "css_element"
         And I follow "McGraw-Hill Campus"
         And I switch to "__mhaairs_service_window" window
+        And I reload the page
         #And I should see "C1"
         And I switch to the main window
         And I log out
@@ -103,7 +106,9 @@ Feature: Add block
         Given the mhaairs customer number and shared secret are set
 
         Given I log in as "admin"
-        And I navigate to "Settings" node in "Site administration > Plugins > Blocks > McGraw-Hill AAIRS"
+        And I follow "Site administration"
+        And I follow "Plugins"
+        And I follow "McGraw-Hill AAIRS"
         And I set the field "McGraw-Hill Campus" to "checked"
         And I press "Save changes"
 
@@ -133,7 +138,9 @@ Feature: Add block
         Given the mhaairs customer number and shared secret are set
 
         Given I log in as "admin"
-        And I navigate to "Settings" node in "Site administration > Plugins > Blocks > McGraw-Hill AAIRS"
+        And I follow "Site administration"
+        And I follow "Plugins"
+        And I follow "McGraw-Hill AAIRS"
         And I set the field "McGraw-Hill Campus" to "checked"
         And I press "Save changes"
 
@@ -175,7 +182,9 @@ Feature: Add block
         Given the mhaairs customer number and shared secret are set
 
         Given I log in as "admin"
-        And I navigate to "Settings" node in "Site administration > Plugins > Blocks > McGraw-Hill AAIRS"
+        And I follow "Site administration"
+        And I follow "Plugins"
+        And I follow "McGraw-Hill AAIRS"
         And I set the field "McGraw-Hill Campus" to "checked"
         And I set the field "Help links" to ""
         And I press "Save changes"
