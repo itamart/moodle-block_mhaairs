@@ -73,6 +73,24 @@ if ($ADMIN->fulltree) {
         PARAM_URL
     ));
 
+    // Instructor roles.
+    $settings->add(new admin_setting_configtext(
+        'block_mhaairs_instructor_roles',
+        new lang_string('instructorroleslabel', 'block_mhaairs'),
+        new lang_string('instructorrolesdesc', 'block_mhaairs'),
+        'editingteacher,teacher',
+        PARAM_TAGLIST
+    ));
+
+    // Student roles.
+    $settings->add(new admin_setting_configtext(
+        'block_mhaairs_student_roles',
+        new lang_string('studentroleslabel', 'block_mhaairs'),
+        new lang_string('studentrolesdesc', 'block_mhaairs'),
+        'student',
+        PARAM_TAGLIST
+    ));
+
     // Available services.
     $settings->add(new admin_setting_configmulticheckbox_mhaairs(
         'block_mhaairs_display_services',

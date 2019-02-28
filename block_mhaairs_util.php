@@ -347,16 +347,46 @@ class MHUtil {
             $fields = 'id,category,fullname,shortname,idnumber,visible';
             $courses = enrol_get_users_courses($userid, true, $fields);
 
-            // Get equivalent roles to Tegrity student role.
-            list($intype, $rparams) = $DB->get_in_or_equal(array('student'));
-            if (!$studentroles = $DB->get_records_select('role', " archetype $intype ", $rparams)) {
-                $studentroles = array();
-            }
+            // Get all roles from DB.
+            $roles = $DB->get_records('role', null, '', 'shortname,id,archetype');
 
-            // Get equivalent roles to Tegrity instructor role.
-            list($intype, $rparams) = $DB->get_in_or_equal(array('teacher', 'editingteacher'));
-            if (!$instructorroles = $DB->get_records_select('role', " archetype $intype ", $rparams)) {
-                $instructorroles = array();
+            // Get equivalent roles to Tegrity student and instructor roles.
+            $studentroles = array();
+            $instructorroles = array();
+            if ($roles) {
+                // Student roles.
+                if ($shortnames = self::get_role_shortnames_from_setting('block_mhaairs_student_roles')) {
+                    // Get role ids for configured short name.
+                    foreach ($shortnames as $name) {
+                        if (!empty($roles[$name])) {
+                            $studentroles[$roles[$name]->id] = $name;
+                        }
+                    }
+                } else {
+                    // Get role ids for default archetypes.
+                    foreach ($roles as $role) {
+                        if ($role->archetype == 'student') {
+                            $studentroles[$role->id] = $role->shortname;
+                        }
+                    }
+                }
+
+                // Instructor roles.
+                if ($shortnames = self::get_role_shortnames_from_setting('block_mhaairs_instructor_roles')) {
+                    // Get role ids for configured short name.
+                    foreach ($shortnames as $name) {
+                        if (!empty($roles[$name])) {
+                            $instructorroles[$roles[$name]->id] = $name;
+                        }
+                    }
+                } else {
+                    // Get role ids for default archetypes.
+                    foreach ($roles as $role) {
+                        if ($role->archetype == 'student') {
+                            $instructorroles[$role->id] = $role->shortname;
+                        }
+                    }
+                }
             }
 
             foreach ($courses as $course) {
@@ -497,6 +527,27 @@ class MHUtil {
         $url = new moodle_url($serviceurl, array('token' => $encodedtoken));
         return $url;
     }
+
+    /**
+     * Returns a list of roles short names from a setting.
+     * @return array|null
+     */
+    protected static function get_role_shortnames_from_setting($settingname) {
+        global $CFG;
+
+        if (!empty($CFG->{$settingname})) {
+            $roleshortnames = [];
+            $shortnames = explode(',', $CFG->{$settingname});
+            foreach ($shortnames as $name) {
+                $name = s($name);
+                $roleshortnames[] = trim($name);
+            }
+            return array_unique($roleshortnames);
+        }
+
+        return null;
+    }
+
 }
 
 /**
