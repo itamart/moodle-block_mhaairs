@@ -64,6 +64,15 @@ if ($ADMIN->fulltree) {
         PARAM_ALPHANUMEXT
     ));
 
+    // End point url.
+    $settings->add(new admin_setting_configtext(
+        'block_mhaairs_endpoint_url',
+        new lang_string('endpointurllabel', 'block_mhaairs'),
+        new lang_string('endpointurldesc', 'block_mhaairs'),
+        'http://mhaairs.tegrity.com/v1/Config/',
+        PARAM_URL
+    ));
+
     // Available services.
     $settings->add(new admin_setting_configmulticheckbox_mhaairs(
         'block_mhaairs_display_services',
