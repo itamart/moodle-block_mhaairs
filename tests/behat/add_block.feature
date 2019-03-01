@@ -86,11 +86,10 @@ Feature: Add block
         And I add the "McGraw-Hill AAIRS" block
 
         Then I should see "McGraw-Hill Campus" in the ".block.block_mhaairs div.servicelink" "css_element"
-        And I follow "McGraw-Hill Campus"
-        And I switch to "__mhaairs_service_window" window
-        And I reload the page
+        #And I follow "McGraw-Hill Campus"
+        #And I switch to "__mhaairs_service_window" window
         #And I should see "C1"
-        And I switch to the main window
+        #And I switch to the main window
         And I log out
 
     #:Scenario
