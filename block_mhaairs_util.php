@@ -382,7 +382,7 @@ class MHUtil {
                 } else {
                     // Get role ids for default archetypes.
                     foreach ($roles as $role) {
-                        if ($role->archetype == 'student') {
+                        if ($role->archetype == 'editingteacher' or $role->archetype == 'teacher') {
                             $instructorroles[$role->id] = $role->shortname;
                         }
                     }
