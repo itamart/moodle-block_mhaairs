@@ -4,7 +4,7 @@ The MH AAIRS block is a Moodle integration with McGraw Hill Campus.
 
 Release:
 ------------
-3.5.3
+3.5.5
 
 Documentation:
 --------------
