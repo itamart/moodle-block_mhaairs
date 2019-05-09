@@ -85,10 +85,9 @@ Feature: Add block
 
         Then I should see "McGraw-Hill Campus" in the ".block.block_mhaairs div.servicelink" "css_element"
         And I follow "McGraw-Hill Campus"
-        And I switch to "__mhaairs_service_window" window
+        #And I switch to "__mhaairs_service_window" window
         #And I should see "C1"
-        And I switch to the main window
-        And I log out
+        #And I switch to the main window
 
     #:Scenario
 
@@ -120,72 +119,3 @@ Feature: Add block
         Then I should see "The block requires further configuration. Please configure the block."
     #:Scenario
 
-    ##/:
-    ## Add block 005
-    ## When site level customer number and secret are configured
-    ## And services are enabled
-    ## And help links are enabled
-    ## Then admin can see all links
-    ## And teacher can see only the teacher link
-    ## And student cannot see the links
-    ##:/
-    Scenario: Add block 005
-        Given the mhaairs customer number and shared secret are set
-
-        Given I log in as "admin"
-        And I navigate to "Settings" node in "Site administration > Plugins > Blocks > McGraw-Hill AAIRS"
-        And I set the field "McGraw-Hill Campus" to "checked"
-        And I press "Save changes"
-
-        And I follow "Site home"
-        And I follow "Course 1"
-
-        When I turn editing mode on
-        And I add the "McGraw-Hill AAIRS" block
-
-        Then I should see "Admin documentation" in the ".block.block_mhaairs a[target=__mhaairs_adminhelp_window]" "css_element"
-        And I should see "Instructor documentation" in the ".block.block_mhaairs a[target=__mhaairs_teacherhelp_window]" "css_element"
-
-        And the mhaairs help page "adminhelp" is not broken
-        And I log out
-
-        When I log in as "teacher1"
-        And I follow "Course 1"
-        Then I should not see "Admin documentation" in the ".block.block_mhaairs" "css_element"
-        And I should see "Instructor documentation" in the ".block.block_mhaairs a[target=__mhaairs_teacherhelp_window]" "css_element"
-
-        And the mhaairs help page "instructorhelp" is not broken
-        And I log out
-
-        When I log in as "student1"
-        And I follow "Course 1"
-        Then I should not see "Admin documentation" in the ".block.block_mhaairs" "css_element"
-        And I should not see "Instructor documentation" in the ".block.block_mhaairs" "css_element"
-
-    #:Scenario
-
-    ##/:
-    ## Add block 006
-    ## When site level customer number and secret are configured
-    ## And services are enabled
-    ## And help links are disabled
-    ## Then the block doesn't display the help links
-    ##:/
-    Scenario: Add block 006
-        Given the mhaairs customer number and shared secret are set
-
-        Given I log in as "admin"
-        And I navigate to "Settings" node in "Site administration > Plugins > Blocks > McGraw-Hill AAIRS"
-        And I set the field "McGraw-Hill Campus" to "checked"
-        And I set the field "Help links" to ""
-        And I press "Save changes"
-
-        And I follow "Site home"
-        And I follow "Course 1"
-
-        When I turn editing mode on
-        And I add the "McGraw-Hill AAIRS" block
-
-        Then I should not see "Admin documentation" in the ".block.block_mhaairs" "css_element"
-        And I should not see "Instructor documentation" in the ".block.block_mhaairs" "css_element"
-    #:Scenario

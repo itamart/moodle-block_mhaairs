@@ -72,12 +72,12 @@ if ($ADMIN->fulltree) {
     ));
 
     // Display help links.
-    $settings->add(new admin_setting_configcheckbox(
-        'block_mhaairs_display_helplinks',
-        new lang_string('mhaairs_displayhelp', 'block_mhaairs'),
-        new lang_string('mhaairs_displayhelpdesc', 'block_mhaairs'),
-        1
-    ));
+    //$settings->add(new admin_setting_configcheckbox(
+    //    'block_mhaairs_display_helplinks',
+    //    new lang_string('mhaairs_displayhelp', 'block_mhaairs'),
+    //    new lang_string('mhaairs_displayhelpdesc', 'block_mhaairs'),
+    //    1
+    //));
 
     // Sync gradebook.
     $settings->add(new admin_setting_configcheckbox(
