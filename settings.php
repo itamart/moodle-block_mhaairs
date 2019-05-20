@@ -69,7 +69,7 @@ if ($ADMIN->fulltree) {
         'block_mhaairs_endpoint_url',
         new lang_string('endpointurllabel', 'block_mhaairs'),
         new lang_string('endpointurldesc', 'block_mhaairs'),
-        null,
+        '',
         PARAM_URL
     ));
 
@@ -78,7 +78,7 @@ if ($ADMIN->fulltree) {
         'block_mhaairs_instructor_roles',
         new lang_string('instructorroleslabel', 'block_mhaairs'),
         new lang_string('instructorrolesdesc', 'block_mhaairs'),
-        null,
+        '',
         PARAM_TAGLIST
     ));
 
@@ -87,7 +87,7 @@ if ($ADMIN->fulltree) {
         'block_mhaairs_student_roles',
         new lang_string('studentroleslabel', 'block_mhaairs'),
         new lang_string('studentrolesdesc', 'block_mhaairs'),
-        null,
+        '',
         PARAM_TAGLIST
     ));
 
