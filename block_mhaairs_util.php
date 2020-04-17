@@ -661,10 +661,23 @@ class MHLog {
      * @param string $data
      * @return int|bool
      */
-    public function log($data) {
+    public function log($data, $rename = false) {
         if ($this->logenabled) {
-            if ($filepath = $this->filepath) {
-                return file_put_contents($this->filepath, $data.PHP_EOL, FILE_APPEND);
+            if ($this->filepath) {
+                // If we need to rename, we add an X in the file name.
+                // This is meant to allow identifying failed requests
+                // In the file names.
+                if ($rename) {
+                    $currentpath = $this->filepath;
+                    $this->_filepath = preg_replace('/(mhaairs_\d{8}_\d{6}_)/', '$1X_', $currentpath);
+                    if (file_exists($currentpath)) {
+                        $currentcontent = file_get_contents($currentpath);
+                        file_put_contents($this->filepath, $currentcontent, FILE_APPEND);
+                        unlink($currentpath);
+                    }
+                }
+                $line = $this->time_stamp. ': '. $data;
+                return file_put_contents($this->filepath, $line.PHP_EOL, FILE_APPEND);
             }
         }
         return false;
@@ -690,7 +703,7 @@ class MHLog {
         if ($this->_filepath === null) {
             if ($dir = $this->dirpath) {
                 $sep = DIRECTORY_SEPARATOR;
-                $fileprefix = userdate(time(), 'mhaairs_%Y-%m-%d_%H-%M-%S_');
+                $fileprefix = userdate(time(), 'mhaairs_%Y%m%d_%H%M%S_');
                 while (empty($this->_filepath)) {
                     $name = uniqid($fileprefix, true);
                     $fullname = "{$dir}{$sep}{$name}.log";
@@ -709,8 +722,7 @@ class MHLog {
      * @return string
      */
     public function get_time_stamp() {
-        $timeformat = get_string('strftimedatetime', 'core_langconfig');
-        return userdate(time(), $timeformat);
+        return userdate(time(), '%Y%m%d %H%M%S');
     }
 
     /**
