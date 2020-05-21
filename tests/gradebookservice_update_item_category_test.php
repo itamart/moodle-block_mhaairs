@@ -53,7 +53,7 @@ class block_mhaairs_gradebookservice_update_item_category_testcase extends block
      *
      * @return void
      */
-    public function test_update_item_new_category() {
+    public function todo_test_update_item_new_category() {
         global $DB;
 
         $this->set_user('admin');
@@ -107,7 +107,7 @@ class block_mhaairs_gradebookservice_update_item_category_testcase extends block
      *
      * @return void
      */
-    public function test_update_item_multiple_categories() {
+    public function todo_test_update_item_multiple_categories() {
         global $DB, $CFG;
 
         $this->set_user('admin');
