@@ -697,9 +697,8 @@ class block_mhaairs_gradebookservice_external extends external_api {
                'itemid' => $gitem->id,
             ));
 
-            // We execute the task.
-            // This will throw an exception if fails to create the category.
-            $addcat->execute();
+           // We queue the task.
+           \core\task\manager::queue_adhoc_task($addcat);
         }
     }
 
