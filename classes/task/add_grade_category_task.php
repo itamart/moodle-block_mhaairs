@@ -32,34 +32,37 @@ class add_grade_category_task extends \core\task\adhoc_task {
     public function execute() {
         $customdata = $this->get_custom_data();
 
-        // Get lock timeout.
-        $timeout = 5;
-        // A namespace for the locks.
-        $locktype = 'block_mhaairs_add_category';
-        // Resource key - course id and category name.
-        $resource = "course: $customdata->courseid; catname: $customdata->catname";
-
-        // Get an instance of the currently configured lock_factory.
-        $lockfactory = \core\lock\lock_config::get_lock_factory($locktype);
-
-        // Open a lock.
-        $lock = $lockfactory->get_lock($resource, $timeout);
-
-        // Add the category.
         $catparams = array(
             'fullname' => $customdata->catname,
             'courseid' => $customdata->courseid
         );
+
+        // If the category does not exist we create it.
         if (!$category = \grade_category::fetch($catparams)) {
-            // If the category does not exist we create it.
+            // Get lock timeout.
+            $timeout = 5;
+            // A namespace for the locks.
+            $locktype = 'block_mhaairs_add_category';
+            // Resource key - course id and category name.
+            $resource = "course: $customdata->courseid; catname: $customdata->catname";
+
+            // Get an instance of the currently configured lock_factory.
+            $lockfactory = \core\lock\lock_config::get_lock_factory($locktype);
+
+            // Open a lock.
+            // This will throw an exception if already locked,
+            // and requeue the task.
+            $lock = $lockfactory->get_lock($resource, $timeout);
+
             $gradeaggregation = get_config('core', 'grade_aggregation');
             if ($gradeaggregation === false) {
                 $gradeaggregation = GRADE_AGGREGATE_WEIGHTED_MEAN2;
             }
-            // Parent category is automatically added(created) during insert.
             $catparams['hidden'] = false;
             $catparams['aggregation'] = $gradeaggregation;
 
+            // Add the category.
+            // Parent category is automatically added(created) during insert.
             try {
                 $category = new \grade_category($catparams, false);
                 $category->id = $category->insert();
@@ -69,10 +72,10 @@ class add_grade_category_task extends \core\task\adhoc_task {
                 // Rethrow to reschedule task.
                 throw $e;
             }
-        }
 
-        // Release locks.
-        $lock->release();
+            // Release locks.
+            $lock->release();
+        }
 
         // Add the item to the category.
         $gitem = \grade_item::fetch(array('id' => $customdata->itemid));
