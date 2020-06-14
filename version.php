@@ -18,7 +18,7 @@
  * Block MHAAIRS version
  *
  * @package block_mhaairs
- * @copyright 2020 Itamar Tzadok {@link http://substantialmethods.com}
+ * @copyright 2021 Itamar Tzadok {@link http://substantialmethods.com}
  * @copyright 2013-2014 Moodlerooms inc.
  * @author Teresa Hardy <thardy@moodlerooms.com>
  * @author Darko Miletic <dmiletic@moodlerooms.com>
@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2018051712;
-$plugin->release = '3.5.12 RC1';
+$plugin->release = '3.5.12';
 $plugin->requires = 2018051700;
 $plugin->cron = 0;
 $plugin->component = 'block_mhaairs';
-$plugin->maturity  = MATURITY_BETA;
+$plugin->maturity  = MATURITY_STABLE;
