@@ -27,9 +27,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2018120309;
-$plugin->release = '3.6.9';
+$plugin->version = 2018120310;
+$plugin->release = '3.6.10 RC1';
 $plugin->requires = 2018120300;
 $plugin->cron = 0;
 $plugin->component = 'block_mhaairs';
-$plugin->maturity  = MATURITY_STABLE;
+$plugin->maturity  = MATURITY_BETA;
