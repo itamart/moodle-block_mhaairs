@@ -39,7 +39,7 @@ Feature: Add block
         ## Student.
         Given I log in as "student1"
         And I am on "Course 1" course homepage
-        Then ".block.block_mhaairs" "css_element" does not exist
+        Then ".block.block_mhaairs" "css_element" should not exist
     #:Scenario
 
     ##/:
