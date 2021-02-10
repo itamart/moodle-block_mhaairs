@@ -269,10 +269,19 @@ class MHUtil {
     public static function hex2bin($str) {
         $bin = "";
         $i = 0;
+        $strlen = strlen($str);
+
+        // Expecting even strlen.
+        if (!$strlen or $strlen % 2 !== 0) {
+            return $bin;
+        }
+
+        // The str is even and long enough for the following conversion.
         do {
-            $bin .= chr(hexdec($str{$i}.$str{($i + 1)}));
+            $bin .= chr(hexdec($str[$i]. $str[($i + 1)]));
             $i += 2;
-        } while ($i < strlen($str));
+        } while ($i < $strlen);
+
         return $bin;
     }
 
